@@ -28,14 +28,47 @@ router.post("/customer",function(request,response){
 	})
 })
 
+router.get("/customer/:id",function(request,response){
+	var customerId= request.params.id;
+	Customer.getCustomerById(customerId,function(err,data){
+		if(err){
+			throw err;
+		}
+		response.json(data)
+	})
+})
+
 router.get("/",function(request,response){
 	response.send ({message:"Hello"})
 })
 
-router.put("/customer/:id",function(request,response){
+router.put("/customeredit/:id",function(request,response){
 	var customerId= request.params.id;
-	var customerdata = request.body;
-	Customer.editCustomer(customerId,customerdata,function(err,data){
+	var dataFromCustomer = request.body;
+	
+	  Customer.getCustomerById(customerId,function(err,dataFromDb){
+		if(err){
+			throw err;
+		}
+		console.log(dataFromDb);
+		var bodyObj = {
+			name : dataFromCustomer.name || dataFromDb.name,
+			email : dataFromCustomer.email || dataFromDb.email,
+			mobile : dataFromCustomer.mobile || dataFromDb.mobile
+		}
+		Customer.editCustomer(customerId,bodyObj,function(err,data){
+			if(err){
+				throw err;
+			}
+			response.json(data)
+		})
+	});
+	
+})
+
+router.delete("/customerdelete/:id",function(request,response){
+	var customerId = request.params.id;
+	Customer.deleteCustomer(customerId,function(err,data){
 		if(err){
 			throw err;
 		}

@@ -10,7 +10,8 @@ var customerSchema = mongoose.Schema({
 	},
 	mobile:{
 		type:String,
-		required:true
+		required:false
+		
 	}
 });
 
@@ -31,4 +32,11 @@ module.exports.editCustomer = function(custId,custObj,callback){
 								email :custObj.email,
 								mobile:custObj.mobile
 							}},callback)
+}
+
+module.exports.deleteCustomer = function(custId,callback){
+	return Customer.remove({_id:custId},callback)
+}
+module.exports.getCustomerById = function(custId,callback){
+	return Customer.findById({_id:custId},callback)
 }
